@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { data } from "./data";
 
 const Comment = ({
@@ -12,7 +12,9 @@ const Comment = ({
   onDeleteReply,
   onEditComment,
   onEditReply,
-  isCommentBySpecificUsers
+  isCommentBySpecificUsers,
+  onPlay,
+  onCopy,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
@@ -58,13 +60,26 @@ const Comment = ({
           </div>
           <div className="flex justify-end md:items-center gap-3">
             <button
+              className="text-green-500 md:px-4 py-1 rounded flex items-center gap-2"
+              onClick={() => onPlay(comment.content)}
+            >
+              <img src="/images/icon-play.svg" alt="" /> <span>Play</span>
+            </button>
+            {/* Add Copy button */}
+            <button
+              className="text-blue-500 md:px-4 py-1 rounded flex items-center gap-2"
+              onClick={() => onCopy(comment.content)}
+            >
+              <img src="/images/icon-copy.svg" alt="" /> <span>Copy</span>
+            </button>
+            <button
               onClick={handleShowReply}
               className="text-[rgb(79,78,156)] border-none gap-2 flex items-center border"
             >
               <img src="/images/icon-reply.svg" alt="" />
               Reply
             </button>
-            {showDeleteButton  && (
+            {showDeleteButton && currentUser && (
               <button
                 className="text-red-500 md:px-4 py-1 rounded flex items-center gap-2"
                 onClick={() => onDeleteComment(comment.id)}
@@ -152,6 +167,8 @@ const Comment = ({
                   onEditReply(replyId, editedContent)
                 }
                 showDeleteButton={showDeleteButton}
+                onPlay={onPlay}
+                onCopy={onCopy}
               />
             ))}
           </div>
@@ -169,7 +186,9 @@ const Reply = ({
   replyContent,
   setReplyContent,
   handleReplySubmit,
-  showDeleteButton
+  showDeleteButton,
+  onPlay,
+  onCopy,
 }) => {
   const isCurrentUser = currentUser.username === reply.user.username;
   const [isEditing, setIsEditing] = useState(false);
@@ -201,6 +220,19 @@ const Reply = ({
             <span className="font-semibold">{reply.user.username}</span>
           </div>
           <div className="flex justify-end md:items-center gap-3">
+            <button
+              className="text-green-500 md:px-4 py-1 rounded flex items-center gap-2"
+              onClick={() => onPlay(reply.content)}
+            >
+              <img src="/images/icon-play.svg" alt="" /> <span>Play</span>
+            </button>
+            {/* Add Copy button */}
+            <button
+              className="text-blue-500 md:px-4 py-1 rounded flex items-center gap-2"
+              onClick={() => onCopy(reply.content)}
+            >
+              <img src="/images/icon-copy.svg" alt="" /> <span>Copy</span>
+            </button>
             <button
               onClick={handleShowReply}
               className="flex items-center gap-2"
@@ -330,10 +362,39 @@ export default function Home() {
   const [comments, setComments] = useState(data[0].comments);
   const [replyContent, setReplyContent] = useState("");
 
+  console.log(replyContent);
+
   const currentUser = data[0].currentUser;
 
+  useEffect(() => {
+    const storedComments = localStorage.getItem("comments");
+    if (storedComments) {
+      setComments(JSON.parse(storedComments));
+    } else {
+      // If no comments are found in local storage, set initial comments from data
+      setComments(data[0].comments);
+    }
+  }, []);
+
+  // Save comments to local storage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("comments", JSON.stringify(comments));
+  }, [comments]);
+
   const isCommentBySpecificUsers = (comment) =>
-  ["amyrobson", "maxblagun", "ramsesmiron"].includes(comment.user.username);
+    ["amyrobson", "maxblagun", "ramsesmiron"].includes(comment.user.username);
+
+  const handlePlayComment = (commentContent) => {
+    const audio = new Audio();
+    audio.src = `data:audio/mpeg;base64,${btoa(commentContent)}`;
+    audio.play();
+  };
+
+  const handleCopyComment = (commentContent) => {
+    navigator.clipboard.writeText(commentContent).then(() => {
+      console.log("Content copied to clipboard");
+    });
+  };
 
   const handleReply = (parentId, content) => {
     const newReply = {
@@ -432,6 +493,8 @@ export default function Home() {
             replyContent={replyContent}
             setReplyContent={setReplyContent}
             isCommentBySpecificUsers={isCommentBySpecificUsers}
+            onPlay={() => handlePlayComment(comment.content)}
+            onCopy={() => handleCopyComment(comment.content)}
           />
         ))}
         <CommentForm comment={currentUser} onSubmit={handleAddComment} />
