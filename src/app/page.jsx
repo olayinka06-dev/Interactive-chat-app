@@ -361,7 +361,8 @@ const CommentForm = ({ onSubmit, comment }) => {
 export default function Home() {
   const [comments, setComments] = useState(data[0].comments);
   const [replyContent, setReplyContent] = useState("");
-
+  // const [replyContents, setReplyContents] = useState({});
+  
   console.log(replyContent);
 
   const currentUser = data[0].currentUser;
@@ -385,10 +386,28 @@ export default function Home() {
     ["amyrobson", "maxblagun", "ramsesmiron"].includes(comment.user.username);
 
   const handlePlayComment = (commentContent) => {
-    const audio = new Audio();
-    audio.src = `data:audio/mpeg;base64,${btoa(commentContent)}`;
-    audio.play();
+    const utterance = new SpeechSynthesisUtterance(commentContent);
+    speechSynthesis.speak(utterance);
+    // const audio = new Audio();
+    // audio.src = `data:audio/mpeg;base64,${btoa(commentContent)}`;
+    // audio.play();
   };
+
+  // const handleSpeakJoke = () => {
+  //   const generatedAdvice = jokeQoute.slip && jokeQoute && jokeQoute.slip.advice;
+  //   const utterance = new SpeechSynthesisUtterance(generatedAdvice);
+  //   utterance.addEventListener("end", () => {
+  //     setIsSpeaking(false);
+  //   });
+
+  //   speechSynthesis.speak(utterance);
+  //   setIsSpeaking(true);
+  // };
+
+  // const handleStopJoke = () => {
+  //   speechSynthesis.cancel();
+  //   setIsSpeaking(false);
+  // };
 
   const handleCopyComment = (commentContent) => {
     navigator.clipboard.writeText(commentContent).then(() => {
