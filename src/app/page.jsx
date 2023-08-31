@@ -12,10 +12,13 @@ const Comment = ({
   onDeleteReply,
   onEditComment,
   onEditReply,
+  isCommentBySpecificUsers
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
   const [showReplyArea, setShowReplyArea] = useState(false);
+
+  const showDeleteButton = isCommentBySpecificUsers(comment);
 
   const isCurrentUser = currentUser.username === comment.user.username;
 
@@ -61,7 +64,7 @@ const Comment = ({
               <img src="/images/icon-reply.svg" alt="" />
               Reply
             </button>
-            {isCurrentUser && (
+            {showDeleteButton  && (
               <button
                 className="text-red-500 md:px-4 py-1 rounded flex items-center gap-2"
                 onClick={() => onDeleteComment(comment.id)}
@@ -327,6 +330,9 @@ export default function Home() {
 
   const currentUser = data[0].currentUser;
 
+  const isCommentBySpecificUsers = (comment) =>
+  ["amyrobson", "maxblagun", "ramsesmiron"].includes(comment.user.username);
+
   const handleReply = (parentId, content) => {
     const newReply = {
       id: Date.now(),
@@ -423,6 +429,7 @@ export default function Home() {
             onEditReply={handleEditReply}
             replyContent={replyContent}
             setReplyContent={setReplyContent}
+            isCommentBySpecificUsers={isCommentBySpecificUsers}
           />
         ))}
         <CommentForm comment={currentUser} onSubmit={handleAddComment} />
