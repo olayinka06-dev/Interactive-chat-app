@@ -151,6 +151,7 @@ const Comment = ({
                 onEdit={(replyId, editedContent) =>
                   onEditReply(replyId, editedContent)
                 }
+                showDeleteButton={showDeleteButton}
               />
             ))}
           </div>
@@ -168,6 +169,7 @@ const Reply = ({
   replyContent,
   setReplyContent,
   handleReplySubmit,
+  showDeleteButton
 }) => {
   const isCurrentUser = currentUser.username === reply.user.username;
   const [isEditing, setIsEditing] = useState(false);
@@ -206,7 +208,7 @@ const Reply = ({
               <img src="/images/icon-reply.svg" alt="" />
               Reply
             </button>
-            {isCurrentUser && (
+            {showDeleteButton && (
               <button
                 className="text-red-500 rounded flex items-center gap-2"
                 onClick={() => onDelete(reply.id)}
