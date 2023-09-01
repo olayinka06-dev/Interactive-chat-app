@@ -79,7 +79,7 @@ const Comment = ({
               <img src="/images/icon-reply.svg" alt="" />
               Reply
             </button>
-            {showDeleteButton && currentUser && (
+            {currentUser && (
               <button
                 className="text-red-500 md:px-4 py-1 rounded flex items-center gap-2"
                 onClick={() => onDeleteComment(comment.id)}
@@ -366,6 +366,7 @@ export default function Home() {
   console.log(replyContent);
 
   const currentUser = data[0].currentUser;
+  
 
   useEffect(() => {
     const storedComments = localStorage.getItem("comments");
