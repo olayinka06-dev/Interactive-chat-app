@@ -15,6 +15,8 @@ const Comment = ({
   isCommentBySpecificUsers,
   onPlay,
   onCopy,
+  onPlayReply,
+  onCopyReply,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
@@ -167,8 +169,8 @@ const Comment = ({
                   onEditReply(replyId, editedContent)
                 }
                 showDeleteButton={showDeleteButton}
-                onPlay={onPlay}
-                onCopy={onCopy}
+                onCopyReply={onCopyReply}
+                onPlayReply={onPlayReply}
               />
             ))}
           </div>
@@ -187,8 +189,8 @@ const Reply = ({
   setReplyContent,
   handleReplySubmit,
   showDeleteButton,
-  onPlay,
-  onCopy,
+  onPlayReply,
+  onCopyReply,
 }) => {
   const isCurrentUser = currentUser.username === reply.user.username;
   const [isEditing, setIsEditing] = useState(false);
@@ -222,14 +224,14 @@ const Reply = ({
           <div className="flex justify-end md:items-center gap-3">
             <button
               className="text-green-500 md:px-4 py-1 rounded flex items-center gap-2"
-              onClick={() => onPlay(reply.content)}
+              onClick={() => onPlayReply(reply.content)}
             >
               <img src="/images/icon-play.svg" alt="" /> <span>Play</span>
             </button>
             {/* Add Copy button */}
             <button
               className="text-blue-500 md:px-4 py-1 rounded flex items-center gap-2"
-              onClick={() => onCopy(reply.content)}
+              onClick={() => onCopyReply(reply.content)}
             >
               <img src="/images/icon-copy.svg" alt="" /> <span>Copy</span>
             </button>
@@ -389,9 +391,10 @@ export default function Home() {
   const handlePlayComment = (commentContent) => {
     const utterance = new SpeechSynthesisUtterance(commentContent);
     speechSynthesis.speak(utterance);
-    // const audio = new Audio();
-    // audio.src = `data:audio/mpeg;base64,${btoa(commentContent)}`;
-    // audio.play();
+  };
+  const handlePlayReply = (commentContent) => {
+    const utterance = new SpeechSynthesisUtterance(commentContent);
+    speechSynthesis.speak(utterance);
   };
 
   // const handleSpeakJoke = () => {
@@ -411,6 +414,11 @@ export default function Home() {
   // };
 
   const handleCopyComment = (commentContent) => {
+    navigator.clipboard.writeText(commentContent).then(() => {
+      console.log("Content copied to clipboard");
+    });
+  };
+  const handleCopyReply = (commentContent) => {
     navigator.clipboard.writeText(commentContent).then(() => {
       console.log("Content copied to clipboard");
     });
@@ -515,6 +523,8 @@ export default function Home() {
             isCommentBySpecificUsers={isCommentBySpecificUsers}
             onPlay={() => handlePlayComment(comment.content)}
             onCopy={() => handleCopyComment(comment.content)}
+            onPlayReply={handlePlayReply}
+            onCopyReply={handleCopyReply}
           />
         ))}
         <CommentForm comment={currentUser} onSubmit={handleAddComment} />
