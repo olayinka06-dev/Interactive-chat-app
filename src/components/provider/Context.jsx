@@ -18,6 +18,13 @@ export const InteractiveChatContext = createContext({
     updatedComments: {},
     comments: {},
     replyContent: "",
+    currentUser: {
+      image: {
+        png: "",
+        webp: ""
+      },
+      username: "",
+    },
   },
 });
 
