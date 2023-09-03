@@ -16,7 +16,22 @@ export const InteractiveChatContext = createContext({
     setComments: () => {},
     setReplyContent: () => {},
     updatedComments: {},
-    comments: {},
+    comments: [
+      {
+        id: "",
+        content: "",
+        createdAt: "",
+        score: "",
+        user: {
+          image: {
+            png: "",
+            webp: ""
+          },
+          username: "",
+        },
+        replies: [],
+      }
+    ],
     replyContent: "",
     currentUser: {
       image: {

@@ -1,71 +1,29 @@
 "use client";
-import React, { useState } from "react";
-import { data } from "../data";
+import Comment from '@/components/interactive_chat/Comment';
+import { useInteractiveChatContext } from '@/components/provider/Context';
+import React, { createContext, useContext } from 'react';
 
-const Comment = ({newMsg}) => {
-  return(
-    <div className="">
+export const CommentContext = createContext();
+
+export const useCommentContext = () => (
+  useContext(CommentContext)
+)
+
+const Home = () => {
+  const { chatData } = useInteractiveChatContext()
+  return (
+    <section>
+      <div className="container">
         {
-            newMsg.map((nw, i)=> (
-                <div key={i} className="">
-                    <p>{nw.content}</p>
-                </div>
-            ))
+          chatData.comments.map((comment)=> (
+            <CommentContext.Provider value={{ comment }}>
+              <Comment/>
+            </CommentContext.Provider>
+          ))
         }
-    </div>
-  );
-};
-
-const CommentForm = ({ onSubmit }) => {
-  const [inputMessage, setInputMessage] = useState(null);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (inputMessage) {
-      onSubmit(inputMessage);
-      setInputMessage("");
-    }
-  };
-
-  return (
-    <div className="">
-      <form onSubmit={handleSubmit}>
-        <textarea
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          className="inline-flex border py-2 px-6 focus:outline-none rounded text-lg"
-          name=""
-          id=""
-          cols="30"
-          rows="2"
-        ></textarea>
-        <button className="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">
-          Submit
-        </button>
-      </form>
-    </div>
-  );
-};
-
-export default function Home() {
-  const [newMessage, setNewMessage] = useState(data[0].comments);
-
-  const handleNewMwssage = (newMsg) => {
-    const newComment = {
-      id: Date.now(),
-      content: newMsg,
-      createdAt: new Date().toDateString(),
-      score: 0,
-    //   user: currentUser,
-      replies: [],
-    };
-    setNewMessage([...newMessage, newComment])
-  };
-
-  return (
-    <div className="">
-        <Comment newMsg={newMessage}/>
-      <CommentForm onSubmit={handleNewMwssage} />
-    </div>
-  );
+      </div>
+    </section>
+  )
 }
+
+export default Home
