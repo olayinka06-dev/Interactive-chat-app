@@ -8,6 +8,16 @@ export const InteractiveChatContext = createContext({
     handleCopyComment: () => {},
     handleCopyReply: () => {},
     handleReply: () => {},
+    handleDeleteComment: () => {},
+    handleDeleteReply: () => {},
+    handleAddComment: () => {},
+    handleEditReply: () => {},
+    handleEditComment: () => {},
+    setComments: () => {},
+    setReplyContent: () => {},
+    updatedComments: {},
+    comments: {},
+    replyContent: "",
   },
 });
 
