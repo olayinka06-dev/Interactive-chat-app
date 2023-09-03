@@ -2,11 +2,15 @@
 import React, { useState, useEffect } from 'react';
 import { useInteractiveChatContext } from '../provider/Context';
 import { useReplyContext } from '../provider/ReplyProvider';
+import { useCommentContext } from '@/app/practice/page';
 
 const Reply = () => {
   const {chatData} = useInteractiveChatContext();
+  const { comment } = useCommentContext();
+  const {reply, handleReplySubmit} = useReplyContext();
 
-  const {reply} = useReplyContext()
+  const showDeleteButton = chatData.isCommentBySpecificUsers(comment);
+
 
   const isCurrentUser = chatData.currentUser.username === reply.user.username;
   const [isEditing, setIsEditing] = useState(false);
@@ -15,7 +19,7 @@ const Reply = () => {
 
   const handleEditSubmit = () => {
     if (editedContent) {
-      onEdit(reply.id, editedContent);
+      chatData.handleEditReply(reply.id, editedContent);
       setIsEditing(false);
     }
   };
@@ -61,7 +65,7 @@ const Reply = () => {
             {showDeleteButton && (
               <button
                 className="text-red-500 rounded flex items-center gap-2"
-                onClick={() => onDelete(reply.id)}
+                onClick={() => chatData.handleDeleteReply(reply.id)}
               >
                 <img src="/images/icon-delete.svg" alt="" /> <span>Delete</span>
               </button>

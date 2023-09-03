@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 
-export const InteractiveChatContext = createContext({
+export const InteractiveChatContext = createContext(
+  {
   chatData: {
     isCommentBySpecificUsers: () => {},
     handlePlayComment: () => {},
@@ -15,7 +16,7 @@ export const InteractiveChatContext = createContext({
     handleEditComment: () => {},
     setComments: () => {},
     setReplyContent: () => {},
-    updatedComments: {},
+    updatedComments: [],
     comments: [
       {
         id: "",
@@ -32,7 +33,7 @@ export const InteractiveChatContext = createContext({
         replies: [],
       }
     ],
-    replyContent: "",
+    replyContent: null,
     currentUser: {
       image: {
         png: "",

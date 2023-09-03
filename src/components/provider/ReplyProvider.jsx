@@ -16,6 +16,7 @@ export const ReplyContext = createContext({
       username: "",
     },
   },
+  handleReplySubmit: ()=> {},
 });
 
 export const useReplyContext = () => (

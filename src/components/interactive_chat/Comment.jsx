@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useInteractiveChatContext } from "../provider/Context";
 import { useCommentContext } from "@/app/practice/page";
 import Reply from "./Reply";
@@ -129,8 +129,8 @@ const Comment = () => {
               className="w-10 h-10 rounded-full mr-2"
             />
             <textarea
-              value={chatData.replyContent}
-              onChange={(e) => chatData.setReplyContent(e.target.value)}
+            value={chatData.replyContent}
+            onChange={(e)=> chatData.setReplyContent(e.target.value)}
               placeholder="Add a reply..."
               className="w-full p-2 border rounded"
               rows="2"
@@ -148,7 +148,7 @@ const Comment = () => {
         {comment.replies.length > 0 && (
           <div className="mt-4 flex flex-col gap-5 pl-4 border-l">
             {comment.replies.map((reply) => (
-              <ReplyContext.Provider value={{ reply }}>
+              <ReplyContext.Provider value={{ reply, handleReplySubmit }}>
                 <Reply
                   key={reply.id}
                   // reply={reply}
