@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useInteractiveChatContext } from '../provider/Context';
 import { useReplyContext } from '../provider/ReplyProvider';
-import { useCommentContext } from '@/app/practice/page';
+import { useCommentContext } from '../provider/CommentContext';
+
 
 const Reply = () => {
   const {chatData} = useInteractiveChatContext();

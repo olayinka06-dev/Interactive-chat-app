@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { useInteractiveChatContext } from "../provider/Context";
-import { useCommentContext } from "@/app/practice/page";
 import Reply from "./Reply";
 import { ReplyContext } from "../provider/ReplyProvider";
+import { useCommentContext } from "../provider/CommentContext";
 
 const Comment = () => {
   const { chatData } = useInteractiveChatContext();

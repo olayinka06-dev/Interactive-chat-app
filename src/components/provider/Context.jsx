@@ -16,7 +16,6 @@ export const InteractiveChatContext = createContext(
     handleEditComment: () => {},
     setComments: () => {},
     setReplyContent: () => {},
-    updatedComments: [],
     comments: [
       {
         id: "",

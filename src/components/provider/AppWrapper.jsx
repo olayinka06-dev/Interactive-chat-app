@@ -147,7 +147,6 @@ export const AppWrapper = ({children}) => {
     handleEditComment,
     setComments,
     setReplyContent,
-    // updatedComments,
     comments,
     replyContent,
     currentUser,
