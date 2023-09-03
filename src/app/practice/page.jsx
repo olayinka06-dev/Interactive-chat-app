@@ -1,5 +1,6 @@
 "use client";
 import Comment from '@/components/interactive_chat/Comment';
+import CommentForm from '@/components/interactive_chat/CommentForm';
 import { useInteractiveChatContext } from '@/components/provider/Context';
 import React, { createContext, useContext } from 'react';
 
@@ -33,10 +34,11 @@ const Home = () => {
         {
           chatData.comments.map((comment)=> (
             <CommentContext.Provider value={{ comment }}>
-              <Comment/>
+              <Comment key={comment.id}/>
             </CommentContext.Provider>
           ))
         }
+        <CommentForm/>
       </div>
     </section>
   )

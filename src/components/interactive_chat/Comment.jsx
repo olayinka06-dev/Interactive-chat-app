@@ -1,11 +1,13 @@
 "use client";
-import React, { useState, useEffect } from 'react';
-import { useInteractiveChatContext } from '../provider/Context';
-import { useCommentContext } from '@/app/practice/page';
+import React, { useState, useEffect } from "react";
+import { useInteractiveChatContext } from "../provider/Context";
+import { useCommentContext } from "@/app/practice/page";
+import Reply from "./Reply";
+import { ReplyContext } from "../provider/ReplyProvider";
 
 const Comment = () => {
-  const {chatData} = useInteractiveChatContext();
-  const {comment} = useCommentContext();
+  const { chatData } = useInteractiveChatContext();
+  const { comment } = useCommentContext();
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
@@ -146,27 +148,29 @@ const Comment = () => {
         {comment.replies.length > 0 && (
           <div className="mt-4 flex flex-col gap-5 pl-4 border-l">
             {comment.replies.map((reply) => (
-              <Reply
-                key={reply.id}
-                reply={reply}
-                currentUser={currentUser}
-                onDelete={() => onDeleteReply(reply.id)}
-                replyContent={replyContent}
-                setReplyContent={setReplyContent}
-                handleReplySubmit={handleReplySubmit}
-                onEdit={(replyId, editedContent) =>
-                  onEditReply(replyId, editedContent)
-                }
-                showDeleteButton={showDeleteButton}
-                onCopyReply={onCopyReply}
-                onPlayReply={onPlayReply}
-              />
+              <ReplyContext.Provider value={{ reply }}>
+                <Reply
+                  key={reply.id}
+                  // reply={reply}
+                  // currentUser={currentUser}
+                  // onDelete={() => onDeleteReply(reply.id)}
+                  // replyContent={replyContent}
+                  // setReplyContent={setReplyContent}
+                  // handleReplySubmit={handleReplySubmit}
+                  // onEdit={(replyId, editedContent) =>
+                  //   onEditReply(replyId, editedContent)
+                  // }
+                  // showDeleteButton={showDeleteButton}
+                  // onCopyReply={onCopyReply}
+                  // onPlayReply={onPlayReply}
+                />
+              </ReplyContext.Provider>
             ))}
           </div>
         )}
       </div>
     </section>
   );
-}
+};
 
 export default Comment;

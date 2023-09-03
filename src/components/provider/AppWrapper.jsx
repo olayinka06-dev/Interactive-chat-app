@@ -1,7 +1,7 @@
 "use client";
 import React, {useEffect, useState} from 'react';
 import { InteractiveChatContext } from './Context';
-import { data } from '@/app/data';
+import { data } from '../data';
 
 
 export const AppWrapper = ({children}) => {
@@ -9,7 +9,7 @@ export const AppWrapper = ({children}) => {
   const [comments, setComments] = useState(data[0].comments);
   const [replyContent, setReplyContent] = useState("");
   
-  console.log(replyContent);
+  console.log(data[0]);
 
   const currentUser = data[0].currentUser;
   

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { data } from "./data";
+import { data } from "../components/data";
 
 const Comment = ({
   replyContent,

@@ -1,9 +1,12 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useInteractiveChatContext } from '../provider/Context';
+import { useReplyContext } from '../provider/ReplyProvider';
 
 const Reply = () => {
   const {chatData} = useInteractiveChatContext();
+
+  const {reply} = useReplyContext()
 
   const isCurrentUser = chatData.currentUser.username === reply.user.username;
   const [isEditing, setIsEditing] = useState(false);
@@ -37,14 +40,14 @@ const Reply = () => {
           <div className="flex justify-end md:items-center gap-3">
             <button
               className="text-green-500 md:px-4 py-1 rounded flex items-center gap-2"
-              onClick={() => onPlayReply(reply.content)}
+              onClick={() => chatData.handlePlayReply(reply.content)}
             >
               <img src="/images/icon-play.svg" alt="" /> <span>Play</span>
             </button>
             {/* Add Copy button */}
             <button
               className="text-blue-500 md:px-4 py-1 rounded flex items-center gap-2"
-              onClick={() => onCopyReply(reply.content)}
+              onClick={() => chatData.handleCopyReply(reply.content)}
             >
               <img src="/images/icon-copy.svg" alt="" /> <span>Copy</span>
             </button>
@@ -101,13 +104,13 @@ const Reply = () => {
       {showReply && (
         <div className="mt-2 bg-white p-5 rounded-lg flex gap-4 justify-between">
           <img
-            src={currentUser.image.png}
-            alt={currentUser.username}
+            src={chatData.currentUser.image.png}
+            alt={chatData.currentUser.username}
             className="w-10 h-10 rounded-full mr-2"
           />
           <textarea
-            value={replyContent}
-            onChange={(e) => setReplyContent(e.target.value)}
+            value={chatData.replyContent}
+            onChange={(e) => chatData.setReplyContent(e.target.value)}
             placeholder="Add a reply..."
             className="w-full p-2 border rounded"
             rows="2"
