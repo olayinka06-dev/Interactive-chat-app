@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useInteractiveChatContext } from '../provider/Context';
-import { useReplyContext } from '../provider/ReplyProvider';
+import { useReplyContext } from '../provider/ReplyContext';
 import { useCommentContext } from '../provider/CommentContext';
 
 
@@ -58,7 +58,7 @@ const Reply = () => {
             </button>
             <button
               onClick={handleShowReply}
-              className="flex items-center gap-2"
+              className="flex text-blue-500 items-center gap-2"
             >
               <img src="/images/icon-reply.svg" alt="" />
               Reply

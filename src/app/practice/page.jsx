@@ -1,25 +1,25 @@
 "use client";
-import Comment from '@/components/interactive_chat/Comment';
-import CommentForm from '@/components/interactive_chat/CommentForm';
-import { CommentContext } from '@/components/provider/CommentContext';
-import { useInteractiveChatContext } from '@/components/provider/Context';
+import Comment from "@/components/interactive_chat/Comment";
+import CommentForm from "@/components/interactive_chat/CommentForm";
+import { CommentContext } from "@/components/provider/CommentContext";
+import { useInteractiveChatContext } from "@/components/provider/Context";
 
 const Home = () => {
-  const { chatData } = useInteractiveChatContext()
+  const { chatData } = useInteractiveChatContext();
   return (
-    <section>
-      <div className="container">
-        {
-          chatData.comments.map((comment)=> (
+    <section className="bg-[rgb(245,246,250)]">
+      <div className="container flex items-center justify-center mx-auto p-4">
+        <div className="w-full max-w-[1000px]">
+          {chatData.comments.map((comment) => (
             <CommentContext.Provider value={{ comment }}>
-              <Comment key={comment.id}/>
+              <Comment key={comment.id} />
             </CommentContext.Provider>
-          ))
-        }
-        <CommentForm/>
+          ))}
+          <CommentForm />
+        </div>
       </div>
     </section>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;

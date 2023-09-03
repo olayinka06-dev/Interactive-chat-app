@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useInteractiveChatContext } from "../provider/Context";
 import Reply from "./Reply";
-import { ReplyContext } from "../provider/ReplyProvider";
+import { ReplyContext } from "../provider/ReplyContext";
 import { useCommentContext } from "../provider/CommentContext";
 
 const Comment = () => {
@@ -13,7 +13,7 @@ const Comment = () => {
   const [editedContent, setEditedContent] = useState(comment.content);
   const [showReplyArea, setShowReplyArea] = useState(false);
 
-  const showDeleteButton = chatData.isCommentBySpecificUsers(comment);
+  // const showDeleteButton = chatData.isCommentBySpecificUsers(comment);
 
   const isCurrentUser = chatData.currentUser.username === comment.user.username;
 

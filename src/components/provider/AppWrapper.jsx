@@ -5,12 +5,10 @@ import { data } from '../data';
 
 
 export const AppWrapper = ({children}) => {
-
+  
   const [comments, setComments] = useState(data[0].comments);
   const [replyContent, setReplyContent] = useState("");
   
-  console.log(data[0]);
-
   const currentUser = data[0].currentUser;
   
 
