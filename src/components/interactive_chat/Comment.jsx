@@ -1,29 +1,31 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import { useInteractiveChatContext } from '../provider/Context';
+import { useCommentContext } from '@/app/practice/page';
 
 const Comment = () => {
   const {chatData} = useInteractiveChatContext();
+  const {comment} = useCommentContext();
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
   const [showReplyArea, setShowReplyArea] = useState(false);
 
-  const showDeleteButton = isCommentBySpecificUsers(comment);
+  const showDeleteButton = chatData.isCommentBySpecificUsers(comment);
 
-  const isCurrentUser = currentUser.username === comment.user.username;
+  const isCurrentUser = chatData.currentUser.username === comment.user.username;
 
   const handleReplySubmit = () => {
-    if (replyContent) {
-      onReply(comment.id, replyContent);
-      setReplyContent("");
+    if (chatData.replyContent) {
+      chatData.handleReply(comment.id, chatData.replyContent);
+      chatData.setReplyContent("");
     }
     setShowReplyArea(false);
   };
 
   const handleEditSubmit = () => {
     if (editedContent) {
-      onEditComment(comment.id, editedContent);
+      chatData.handleEditComment(comment.id, editedContent);
       setIsEditing(false);
     }
   };
@@ -50,14 +52,14 @@ const Comment = () => {
           <div className="flex justify-end md:items-center gap-3">
             <button
               className="text-green-500 md:px-4 py-1 rounded flex items-center gap-2"
-              onClick={() => onPlay(comment.content)}
+              onClick={() => chatData.handlePlayComment(comment.content)}
             >
               <img src="/images/icon-play.svg" alt="" /> <span>Play</span>
             </button>
             {/* Add Copy button */}
             <button
               className="text-blue-500 md:px-4 py-1 rounded flex items-center gap-2"
-              onClick={() => onCopy(comment.content)}
+              onClick={() => chatData.handleCopyComment(comment.content)}
             >
               <img src="/images/icon-copy.svg" alt="" /> <span>Copy</span>
             </button>
@@ -68,10 +70,10 @@ const Comment = () => {
               <img src="/images/icon-reply.svg" alt="" />
               Reply
             </button>
-            {currentUser && (
+            {chatData.currentUser && (
               <button
                 className="text-red-500 md:px-4 py-1 rounded flex items-center gap-2"
-                onClick={() => onDeleteComment(comment.id)}
+                onClick={() => chatData.handleDeleteComment(comment.id)}
               >
                 <img src="/images/icon-delete.svg" alt="" /> <span>Delete</span>
               </button>
@@ -120,13 +122,13 @@ const Comment = () => {
         {showReplyArea && (
           <div className="mt-2 bg-white p-5 rounded-lg flex gap-4 justify-between">
             <img
-              src={currentUser.image.png}
-              alt={currentUser.username}
+              src={chatData.currentUser.image.png}
+              alt={chatData.currentUser.username}
               className="w-10 h-10 rounded-full mr-2"
             />
             <textarea
-              value={replyContent}
-              onChange={(e) => setReplyContent(e.target.value)}
+              value={chatData.replyContent}
+              onChange={(e) => chatData.setReplyContent(e.target.value)}
               placeholder="Add a reply..."
               className="w-full p-2 border rounded"
               rows="2"

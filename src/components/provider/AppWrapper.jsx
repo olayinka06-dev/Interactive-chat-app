@@ -1,6 +1,7 @@
 "use client";
 import React, {useEffect, useState} from 'react';
 import { InteractiveChatContext } from './Context';
+import { data } from '@/app/data';
 
 
 export const AppWrapper = ({children}) => {
