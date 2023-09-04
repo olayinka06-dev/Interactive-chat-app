@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useInteractiveChatContext } from "../provider/Context";
 import Reply from "./Reply";
 import { ReplyContext } from "../provider/ReplyContext";
@@ -12,10 +12,26 @@ const Comment = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
   const [showReplyArea, setShowReplyArea] = useState(false);
+  const [counter, setCounter] = useState(0);
 
   // const showDeleteButton = chatData.isCommentBySpecificUsers(comment);
 
   const isCurrentUser = chatData.currentUser.username === comment.user.username;
+
+  useEffect(() => {
+    const storedCounter = localStorage.getItem("counter");
+    if (storedCounter) {
+      setCounter(JSON.parse(storedCounter));
+    } else {
+      // If no Counter are found in local storage, set initial comments from data
+      setCounter(counter);
+    }
+  }, []);
+
+  // Save Counter to local storage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("counter", JSON.stringify(counter));
+  }, [counter]);
 
   const handleReplySubmit = () => {
     if (chatData.replyContent) {
@@ -39,8 +55,18 @@ const Comment = () => {
   return (
     <section className="">
       {/* My Own Chat */}
-
-      <div className="bg-white px-4 py-7 shadow rounded-lg mb-4">
+      <div className="bg-white  px-4 py-7 shadow rounded-lg mb-4">
+        <div className="">
+          <div className="flex flex-row justify-between gap-2 p-3 w-32 rounded bg-[rgb(245,246,250)]">
+            <button onClick={()=> counter >= 0 && setCounter(counter+1)}>
+              <img src="/images/icon-plus.svg" alt="" />
+            </button>
+            <span>{counter}</span>
+            <button onClick={()=> counter > 0 && setCounter(counter-1)}>
+              <img src="/images/icon-minus.svg" alt="" />
+            </button>
+          </div>
+        </div>
         <div className="flex gap-3 md:gap-0 flex-col-reverse md:flex-row justify-between">
           <div className="flex md:gap-5 gap-3 justify-start md:justify-between items-start md:items-center mb-2">
             <img
@@ -51,7 +77,7 @@ const Comment = () => {
             <span>{comment.createdAt}</span>
             <span className="font-semibold">{comment.user.username}</span>
           </div>
-          <div className="flex justify-end md:items-center gap-3">
+          <div className=" flex justify-end md:items-center gap-3">
             <button
               className="text-green-500 md:px-4 py-1 rounded flex items-center gap-2"
               onClick={() => chatData.handlePlayComment(comment.content)}
@@ -129,8 +155,8 @@ const Comment = () => {
               className="w-10 h-10 rounded-full mr-2"
             />
             <textarea
-            value={chatData.replyContent}
-            onChange={(e)=> chatData.setReplyContent(e.target.value)}
+              value={chatData.replyContent}
+              onChange={(e) => chatData.setReplyContent(e.target.value)}
               placeholder="Add a reply..."
               className="w-full p-2 border rounded"
               rows="2"
@@ -149,21 +175,7 @@ const Comment = () => {
           <div className="mt-4 flex flex-col gap-5 pl-4 border-l">
             {comment.replies.map((reply) => (
               <ReplyContext.Provider value={{ reply, handleReplySubmit }}>
-                <Reply
-                  key={reply.id}
-                  // reply={reply}
-                  // currentUser={currentUser}
-                  // onDelete={() => onDeleteReply(reply.id)}
-                  // replyContent={replyContent}
-                  // setReplyContent={setReplyContent}
-                  // handleReplySubmit={handleReplySubmit}
-                  // onEdit={(replyId, editedContent) =>
-                  //   onEditReply(replyId, editedContent)
-                  // }
-                  // showDeleteButton={showDeleteButton}
-                  // onCopyReply={onCopyReply}
-                  // onPlayReply={onPlayReply}
-                />
+                <Reply key={reply.id} />
               </ReplyContext.Provider>
             ))}
           </div>

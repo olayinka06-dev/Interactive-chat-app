@@ -1,22 +1,21 @@
 "use client";
-import React, { useState } from 'react';
-import { useInteractiveChatContext } from '../provider/Context';
-import { useReplyContext } from '../provider/ReplyContext';
-import { useCommentContext } from '../provider/CommentContext';
-
+import React, { useState } from "react";
+import { useInteractiveChatContext } from "../provider/Context";
+import { useReplyContext } from "../provider/ReplyContext";
+import { useCommentContext } from "../provider/CommentContext";
 
 const Reply = () => {
-  const {chatData} = useInteractiveChatContext();
+  const { chatData } = useInteractiveChatContext();
   const { comment } = useCommentContext();
-  const {reply, handleReplySubmit} = useReplyContext();
+  const { reply, handleReplySubmit } = useReplyContext();
 
   const showDeleteButton = chatData.isCommentBySpecificUsers(comment);
-
 
   const isCurrentUser = chatData.currentUser.username === reply.user.username;
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(reply.content);
   const [showReply, setShowReply] = useState(false);
+  const [counter, setCounter] = useState(0);
 
   const handleEditSubmit = () => {
     if (editedContent) {
@@ -32,6 +31,17 @@ const Reply = () => {
   return (
     <section className="">
       <div className="mb-2 bg-white rounded-lg p-4">
+        <div className="">
+          <div className="flex flex-row justify-between gap-2 p-3 w-32 rounded bg-[rgb(245,246,250)]">
+            <button onClick={() => counter >= 0 && setCounter(counter + 1)}>
+              <img src="/images/icon-plus.svg" alt="" />
+            </button>
+            <span>{counter}</span>
+            <button onClick={() => counter > 0 && setCounter(counter - 1)}>
+              <img src="/images/icon-minus.svg" alt="" />
+            </button>
+          </div>
+        </div>
         <div className="flex gap-3 md:gap-0 flex-col-reverse md:flex-row justify-between">
           <div className="flex md:gap-5 gap-3 justify-start md:justify-between items-start md:items-center mb-2">
             <img
@@ -134,6 +144,6 @@ const Reply = () => {
       )}
     </section>
   );
-}
+};
 
 export default Reply;
