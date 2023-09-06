@@ -4,6 +4,13 @@ import { useInteractiveChatContext } from "../provider/Context";
 import Reply from "./Reply";
 import { ReplyContext } from "../provider/ReplyContext";
 import { useCommentContext } from "../provider/CommentContext";
+import {BiCheck, BiCopy} from 'react-icons/bi';
+import {BsFillPlayFill, BsPauseFill} from "react-icons/bs"
+import {GrEdit} from 'react-icons/gr';
+import {FaShare} from "react-icons/fa";
+import {AiTwotoneDelete} from 'react-icons/ai';
+import {CgMoreVerticalO} from 'react-icons/cg';
+import {MdOutlineMoreVert} from 'react-icons/md'
 
 const Comment = () => {
   const { chatData } = useInteractiveChatContext();
