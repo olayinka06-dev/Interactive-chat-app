@@ -19,19 +19,20 @@ const Comment = () => {
   const isCurrentUser = chatData.currentUser.username === comment.user.username;
 
   useEffect(() => {
-    const storedCounter = localStorage.getItem("counter");
+    // Use the comment's ID as a unique key in local storage
+    const storedCounter = localStorage.getItem(`counter_${comment.id}`);
     if (storedCounter) {
       setCounter(JSON.parse(storedCounter));
     } else {
-      // If no Counter are found in local storage, set initial comments from data
-      setCounter(counter);
+      // If no counter is found in local storage, set the initial counter value
+      setCounter(0);
     }
-  }, []);
+  }, [comment.id]);
 
   // Save Counter to local storage whenever it changes
   useEffect(() => {
-    localStorage.setItem("counter", JSON.stringify(counter));
-  }, [counter]);
+    localStorage.setItem(`counter_${comment.id}`, JSON.stringify(counter));
+  }, [counter, comment.id]);
 
   const handleReplySubmit = () => {
     if (chatData.replyContent) {
@@ -58,11 +59,11 @@ const Comment = () => {
       <div className="bg-white  px-4 py-7 shadow rounded-lg mb-4">
         <div className="">
           <div className="flex flex-row justify-between gap-2 p-3 w-32 rounded bg-[rgb(245,246,250)]">
-            <button onClick={()=> counter >= 0 && setCounter(counter+1)}>
+            <button onClick={() => counter >= 0 && setCounter(counter + 1)}>
               <img src="/images/icon-plus.svg" alt="" />
             </button>
             <span>{counter}</span>
-            <button onClick={()=> counter > 0 && setCounter(counter-1)}>
+            <button onClick={() => counter > 0 && setCounter(counter - 1)}>
               <img src="/images/icon-minus.svg" alt="" />
             </button>
           </div>
