@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useInteractiveChatContext } from "../provider/Context";
 import { useReplyContext } from "../provider/ReplyContext";
 import { useCommentContext } from "../provider/CommentContext";
@@ -16,6 +16,22 @@ const Reply = () => {
   const [editedContent, setEditedContent] = useState(reply.content);
   const [showReply, setShowReply] = useState(false);
   const [counter, setCounter] = useState(0);
+
+  useEffect(() => {
+    // Use the comment's ID as a unique key in local storage
+    const storedCounter = localStorage.getItem(`counter_${comment.id}`);
+    if (storedCounter) {
+      setCounter(JSON.parse(storedCounter));
+    } else {
+      // If no counter is found in local storage, set the initial counter value
+      setCounter(0);
+    }
+  }, [comment.id]);
+
+  // Save Counter to local storage whenever it changes
+  useEffect(() => {
+    localStorage.setItem(`counter_${comment.id}`, JSON.stringify(counter));
+  }, [counter, comment.id]);
 
   const handleEditSubmit = () => {
     if (editedContent) {
