@@ -1,18 +1,20 @@
 "use client";
-import React, {useEffect, useState} from 'react';
-import { InteractiveChatContext } from './Context';
-import { data } from '../data';
+import React, { useEffect, useRef, useState } from "react";
+import { InteractiveChatContext } from "./Context";
+import { data } from "../data";
 
-
-export const AppWrapper = ({children}) => {
-  
+export const AppWrapper = ({ children }) => {
   const [comments, setComments] = useState(data[0].comments);
   const [replyContent, setReplyContent] = useState("");
   const [isPlay, setIsPlay] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
-  
+
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioUrl, setAudioUrl] = useState(null);
+  const mediaRecorder = useRef(null);
+  const audioChunks = useRef([]);
+
   const currentUser = data[0].currentUser;
-  
 
   useEffect(() => {
     const storedComments = localStorage.getItem("comments");
@@ -45,16 +47,16 @@ export const AppWrapper = ({children}) => {
     setIsCopy(true);
 
     setTimeout(() => {
-      setIsCopy(false)
+      setIsCopy(false);
     }, 2000);
-    
-    navigator.clipboard.writeText(commentContent)
+
+    navigator.clipboard.writeText(commentContent);
     // .then(() => {
     //   console.log("Content copied to clipboard");
     // });
   };
   const handleCopyReply = (commentContent) => {
-    navigator.clipboard.writeText(commentContent)
+    navigator.clipboard.writeText(commentContent);
     // .then(() => {
     //   console.log("Content copied to clipboard");
     // });
@@ -102,6 +104,7 @@ export const AppWrapper = ({children}) => {
     const newComment = {
       id: Date.now(),
       content: content,
+      audio: audioUrl&&audioUrl,
       createdAt: new Date().toLocaleTimeString(),
       score: 0,
       user: currentUser,
@@ -141,6 +144,33 @@ export const AppWrapper = ({children}) => {
     setComments(updatedComments);
   };
 
+  const startRecording = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder.current = new MediaRecorder(stream);
+
+    mediaRecorder.current.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        audioChunks.current.push(event.data);
+      }
+    };
+
+    mediaRecorder.current.onstop = () => {
+      const audioBlob = new Blob(audioChunks.current, { type: "audio/mp3" });
+      const url = URL.createObjectURL(audioBlob);
+      setAudioUrl(url);
+    };
+
+    mediaRecorder.current.start();
+    setIsRecording(true);
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorder.current && mediaRecorder.current.state === "recording") {
+      mediaRecorder.current.stop();
+      setIsRecording(false);
+    }
+  };
+
   const chatData = {
     isCommentBySpecificUsers,
     handlePlayComment,
@@ -157,17 +187,28 @@ export const AppWrapper = ({children}) => {
     setReplyContent,
     setIsCopy,
     setIsPlay,
+    startRecording,
+    stopRecording,
+    setIsRecording,
+    setAudioUrl,
+    isRecording,
+    audioUrl,
     comments,
     replyContent,
     currentUser,
     isCopy,
-    isPlay
-  }
+    isPlay,
+  };
 
   return (
     <InteractiveChatContext.Provider value={{ chatData }}>
       {children}
     </InteractiveChatContext.Provider>
-  )
-}
+  );
+};
 
+// {audioUrl && (
+//   <audio controls>
+//     <source src={audioUrl} type="audio/mp3" />
+//   </audio>
+// )}

@@ -60,8 +60,8 @@ const Comment = () => {
   };
 
   const handleShowMenu = () => {
-    setShowMenu(!showMenu)
-  }
+    setShowMenu(!showMenu);
+  };
 
   return (
     <section className="">
@@ -89,67 +89,82 @@ const Comment = () => {
             <span className="font-semibold">{comment.user.username}</span>
           </div>
           <div className=" flex justify-end md:items-center gap-3">
-            <button onClick={handleShowMenu} className="block md:hidden p-1 border-[2px] border-solid border-[rgb(245,246,250)] rounded-full hover:bg-[rgb(245,246,250)]">
-              <MdOutlineMoreVert/>
-            </button>
-            <div className={`${showMenu ? "flex": "hidden"} items-center md:flex gap-3`}>
             <button
-              className="text-green-500 md:px-4 py-1 rounded flex items-center gap-2"
-              onClick={() => chatData.handlePlayComment(comment.content)}
+              onClick={handleShowMenu}
+              className="block md:hidden p-1 border-[2px] border-solid border-[rgb(245,246,250)] rounded-full hover:bg-[rgb(245,246,250)]"
             >
-              <BsFillPlayFill /> <span className="md:block hidden">Play</span>
+              <MdOutlineMoreVert />
             </button>
-            {/* Copy button */}
-            <button
-              className="text-blue-500 md:px-4 py-1 rounded flex items-center gap-2"
-              onClick={() => {
-                chatData.handleCopyComment(comment.content),
-                  setIsCopy(true),
-                  setTimeout(() => {
-                    setIsCopy(false);
-                  }, 2000);
-              }}
+            <div
+              className={`${
+                showMenu ? "flex" : "hidden"
+              } items-center md:flex gap-3`}
             >
-              {isCopy ? <BiCheck /> : <BiCopy />}{" "}
-              <span className="md:block hidden">{isCopy ? "Copied!":"Copy"}</span>
-            </button>
-            {/* Copy button */}
-
-            {/* Reply button */}
-            <button
-              onClick={handleShowReply}
-              className="text-[rgb(79,78,156)] border-none gap-2 flex items-center border"
-            >
-              <FaShare />
-              <span className="md:block hidden">Reply</span>
-            </button>
-            {/* Reply button */}
-
-            {/* Delete button */}
-            {chatData.currentUser && (
               <button
-                className="text-red-500 md:px-4 py-1 rounded flex items-center gap-2"
-                onClick={() => chatData.handleDeleteComment(comment.id)}
+                className="text-green-500 md:px-4 py-1 rounded flex items-center gap-2"
+                onClick={() => chatData.handlePlayComment(comment.content)}
               >
-                <AiTwotoneDelete />{" "}
-                <span className="md:block hidden">Delete</span>
+                <BsFillPlayFill /> <span className="md:block hidden">Play</span>
               </button>
-            )}
-            {/* Delete button */}
-            {isCurrentUser && !isEditing && (
+              {/* Copy button */}
               <button
-                className=" text-blue-500 px-2 py-1 flex items-center gap-2 rounded"
-                onClick={() => setIsEditing(true)}
+                className="text-blue-500 md:px-4 py-1 rounded flex items-center gap-2"
+                onClick={() => {
+                  chatData.handleCopyComment(comment.content),
+                    setIsCopy(true),
+                    setTimeout(() => {
+                      setIsCopy(false);
+                    }, 2000);
+                }}
               >
-                <AiFillEdit/>
-                <span className="md:block hidden">Edit Reply</span>
+                {isCopy ? <BiCheck /> : <BiCopy />}{" "}
+                <span className="md:block hidden">
+                  {isCopy ? "Copied!" : "Copy"}
+                </span>
               </button>
-            )}
+              {/* Copy button */}
+
+              {/* Reply button */}
+              <button
+                onClick={handleShowReply}
+                className="text-[rgb(79,78,156)] border-none gap-2 flex items-center border"
+              >
+                <FaShare />
+                <span className="md:block hidden">Reply</span>
+              </button>
+              {/* Reply button */}
+
+              {/* Delete button */}
+              {chatData.currentUser && (
+                <button
+                  className="text-red-500 md:px-4 py-1 rounded flex items-center gap-2"
+                  onClick={() => chatData.handleDeleteComment(comment.id)}
+                >
+                  <AiTwotoneDelete />{" "}
+                  <span className="md:block hidden">Delete</span>
+                </button>
+              )}
+              {/* Delete button */}
+              {isCurrentUser && !isEditing && (
+                <button
+                  className=" text-blue-500 px-2 py-1 flex items-center gap-2 rounded"
+                  onClick={() => setIsEditing(true)}
+                >
+                  <AiFillEdit />
+                  <span className="md:block hidden">Edit Reply</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
 
         <p>{comment.content}</p>
+
+        {chatData.audioUrl && (
+          <audio controls>
+            <source src={chatData.audioUrl} type="audio/mp3" />
+          </audio>
+        )}
 
         {isCurrentUser && isEditing && (
           <div className="mt-2">
@@ -179,12 +194,15 @@ const Comment = () => {
 
       <div className="p-4 mb-4">
         {showReplyArea && (
-          <CommentReply handleReplySubmit={handleReplySubmit}/>
+          <CommentReply handleReplySubmit={handleReplySubmit} />
         )}
         {comment.replies.length > 0 && (
           <div className="mt-4 flex flex-col gap-5 pl-4 border-l">
             {comment.replies.map((reply) => (
-              <ReplyContext.Provider key={reply.id} value={{ reply, handleReplySubmit }}>
+              <ReplyContext.Provider
+                key={reply.id}
+                value={{ reply, handleReplySubmit }}
+              >
                 <Reply />
               </ReplyContext.Provider>
             ))}

@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useInteractiveChatContext } from "../provider/Context";
+import { BiMicrophone, BiMicrophoneOff } from "react-icons/bi";
 
 const CommentForm = () => {
   const { chatData } = useInteractiveChatContext();
@@ -39,6 +40,17 @@ const CommentForm = () => {
         >
           Send
         </button>
+        <div>
+          {chatData.isRecording ? (
+            <button onClick={chatData.stopRecording}>
+              <BiMicrophoneOff />
+            </button>
+          ) : (
+            <button onClick={chatData.startRecording}>
+              <BiMicrophone />
+            </button>
+          )}
+        </div>
       </div>
     </form>
   );

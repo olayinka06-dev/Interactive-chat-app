@@ -13,7 +13,7 @@ import { MdOutlineMoreVert } from "react-icons/md";
 const Reply = () => {
   const { chatData } = useInteractiveChatContext();
   const { comment } = useCommentContext();
-  const { reply, handleReplySubmit } = useReplyContext();
+  const { reply } = useReplyContext();
 
   const showDeleteButton = chatData.isCommentBySpecificUsers(comment);
 
@@ -73,6 +73,7 @@ const Reply = () => {
               className="w-6 h-6 rounded-full mr-2"
             />
             <span>{reply.createdAt}</span>
+            <span>{reply.replyingTo}</span>
             <span className="font-semibold">{reply.user.username}</span>
           </div>
           <div className="flex justify-end md:items-center gap-3">
