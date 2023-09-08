@@ -6,11 +6,10 @@ import { ReplyContext } from "../provider/ReplyContext";
 import { useCommentContext } from "../provider/CommentContext";
 import { BiCheck, BiCopy } from "react-icons/bi";
 import { BsFillPlayFill, BsPauseFill } from "react-icons/bs";
-import { GrEdit } from "react-icons/gr";
 import { FaShare } from "react-icons/fa";
 import { AiFillEdit, AiTwotoneDelete } from "react-icons/ai";
-import { CgMoreVerticalO } from "react-icons/cg";
 import { MdOutlineMoreVert } from "react-icons/md";
+import { CommentReply } from "../entities/Entity";
 
 const Comment = () => {
   const { chatData } = useInteractiveChatContext();
@@ -22,8 +21,6 @@ const Comment = () => {
   const [counter, setCounter] = useState(0);
   const [isCopy, setIsCopy] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-
-  // const showDeleteButton = chatData.isCommentBySpecificUsers(comment);
 
   const isCurrentUser = chatData.currentUser.username === comment.user.username;
 
@@ -182,28 +179,7 @@ const Comment = () => {
 
       <div className="p-4 mb-4">
         {showReplyArea && (
-          <div className="mt-2 bg-white p-5 rounded-lg flex gap-4 justify-between">
-            <img
-              src={chatData.currentUser.image.png}
-              alt={chatData.currentUser.username}
-              className="w-10 h-10 rounded-full mr-2"
-            />
-            <textarea
-              value={chatData.replyContent}
-              onChange={(e) => chatData.setReplyContent(e.target.value)}
-              placeholder="Add a reply..."
-              className="w-full p-2 border rounded"
-              rows="2"
-            />
-            <div className="">
-              <button
-                className=" bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
-                onClick={handleReplySubmit}
-              >
-                Reply
-              </button>
-            </div>
-          </div>
+          <CommentReply handleReplySubmit={handleReplySubmit}/>
         )}
         {comment.replies.length > 0 && (
           <div className="mt-4 flex flex-col gap-5 pl-4 border-l">

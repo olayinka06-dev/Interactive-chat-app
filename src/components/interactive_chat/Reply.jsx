@@ -4,6 +4,11 @@ import { useInteractiveChatContext } from "../provider/Context";
 import { useReplyContext } from "../provider/ReplyContext";
 import { useCommentContext } from "../provider/CommentContext";
 import { ShowReply } from "../entities/Entity";
+import { BiCheck, BiCopy } from "react-icons/bi";
+import { BsFillPlayFill, BsPauseFill } from "react-icons/bs";
+import { FaShare } from "react-icons/fa";
+import { AiFillEdit, AiTwotoneDelete } from "react-icons/ai";
+import { MdOutlineMoreVert } from "react-icons/md";
 
 const Reply = () => {
   const { chatData } = useInteractiveChatContext();
@@ -17,6 +22,7 @@ const Reply = () => {
   const [editedContent, setEditedContent] = useState(reply.content);
   const [showReply, setShowReply] = useState(false);
   const [counter, setCounter] = useState(0);
+  const [isCopy, setIsCopy] = useState(false);
 
   useEffect(() => {
     // Use the comment's ID as a unique key in local storage
@@ -74,28 +80,38 @@ const Reply = () => {
               className="text-green-500 md:px-4 py-1 rounded flex items-center gap-2"
               onClick={() => chatData.handlePlayReply(reply.content)}
             >
-              <img src="/images/icon-play.svg" alt="" /> <span>Play</span>
+              <BsFillPlayFill /> <span className="md:block hidden">Play</span>
             </button>
             {/* Add Copy button */}
             <button
               className="text-blue-500 md:px-4 py-1 rounded flex items-center gap-2"
-              onClick={() => chatData.handleCopyReply(reply.content)}
+              onClick={() => {
+                chatData.handleCopyReply(reply.content),
+                  setIsCopy(true),
+                  setTimeout(() => {
+                    setIsCopy(false);
+                  }, 2000);
+              }}
             >
-              <img src="/images/icon-copy.svg" alt="" /> <span>Copy</span>
+              {isCopy ? <BiCheck /> : <BiCopy />}{" "}
+              <span className="md:block hidden">
+                {isCopy ? "Copied!" : "Copy"}
+              </span>
             </button>
             <button
               onClick={handleShowReply}
-              className="flex text-blue-500 items-center gap-2"
+              className="text-[rgb(79,78,156)] border-none gap-2 flex items-center border"
             >
-              <img src="/images/icon-reply.svg" alt="" />
-              Reply
+              <FaShare />
+              <span className="md:block hidden">Reply</span>
             </button>
             {showDeleteButton && (
               <button
                 className="text-red-500 rounded flex items-center gap-2"
                 onClick={() => chatData.handleDeleteReply(reply.id)}
               >
-                <img src="/images/icon-delete.svg" alt="" /> <span>Delete</span>
+                <AiTwotoneDelete />{" "}
+                <span className="md:block hidden">Delete</span>
               </button>
             )}
             {isCurrentUser && !isEditing && (
@@ -133,9 +149,7 @@ const Reply = () => {
           </div>
         )}
       </div>
-      {showReply && (
-        <ShowReply setShowReply={setShowReply}/>
-      )}
+      {showReply && <ShowReply setShowReply={setShowReply} />}
     </section>
   );
 };
