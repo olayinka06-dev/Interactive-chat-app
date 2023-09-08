@@ -11,8 +11,8 @@ const Home = () => {
       <div className="container flex items-center justify-center mx-auto p-4">
         <div className="w-full max-w-[1000px]">
           {chatData.comments.map((comment) => (
-            <CommentContext.Provider value={{ comment }}>
-              <Comment key={comment.id} />
+            <CommentContext.Provider key={comment.id} value={{ comment }}>
+              <Comment />
             </CommentContext.Provider>
           ))}
           <CommentForm />

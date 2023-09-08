@@ -4,13 +4,13 @@ import { useInteractiveChatContext } from "../provider/Context";
 import Reply from "./Reply";
 import { ReplyContext } from "../provider/ReplyContext";
 import { useCommentContext } from "../provider/CommentContext";
-import {BiCheck, BiCopy} from 'react-icons/bi';
-import {BsFillPlayFill, BsPauseFill} from "react-icons/bs"
-import {GrEdit} from 'react-icons/gr';
-import {FaShare} from "react-icons/fa";
-import {AiTwotoneDelete} from 'react-icons/ai';
-import {CgMoreVerticalO} from 'react-icons/cg';
-import {MdOutlineMoreVert} from 'react-icons/md'
+import { BiCheck, BiCopy } from "react-icons/bi";
+import { BsFillPlayFill, BsPauseFill } from "react-icons/bs";
+import { GrEdit } from "react-icons/gr";
+import { FaShare } from "react-icons/fa";
+import { AiFillEdit, AiTwotoneDelete } from "react-icons/ai";
+import { CgMoreVerticalO } from "react-icons/cg";
+import { MdOutlineMoreVert } from "react-icons/md";
 
 const Comment = () => {
   const { chatData } = useInteractiveChatContext();
@@ -20,6 +20,8 @@ const Comment = () => {
   const [editedContent, setEditedContent] = useState(comment.content);
   const [showReplyArea, setShowReplyArea] = useState(false);
   const [counter, setCounter] = useState(0);
+  const [isCopy, setIsCopy] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   // const showDeleteButton = chatData.isCommentBySpecificUsers(comment);
 
@@ -60,6 +62,10 @@ const Comment = () => {
     setShowReplyArea(!showReplyArea);
   };
 
+  const handleShowMenu = () => {
+    setShowMenu(!showMenu)
+  }
+
   return (
     <section className="">
       {/* My Own Chat */}
@@ -86,43 +92,63 @@ const Comment = () => {
             <span className="font-semibold">{comment.user.username}</span>
           </div>
           <div className=" flex justify-end md:items-center gap-3">
+            <button onClick={handleShowMenu} className="block md:hidden p-1 border-[2px] border-solid border-[rgb(245,246,250)] rounded-full hover:bg-[rgb(245,246,250)]">
+              <MdOutlineMoreVert/>
+            </button>
+            <div className={`${showMenu ? "flex": "hidden"} items-center md:flex gap-3`}>
             <button
               className="text-green-500 md:px-4 py-1 rounded flex items-center gap-2"
               onClick={() => chatData.handlePlayComment(comment.content)}
             >
-              <img src="/images/icon-play.svg" alt="" /> <span>Play</span>
+              <BsFillPlayFill /> <span className="md:block hidden">Play</span>
             </button>
-            {/* Add Copy button */}
+            {/* Copy button */}
             <button
               className="text-blue-500 md:px-4 py-1 rounded flex items-center gap-2"
-              onClick={() => chatData.handleCopyComment(comment.content)}
+              onClick={() => {
+                chatData.handleCopyComment(comment.content),
+                  setIsCopy(true),
+                  setTimeout(() => {
+                    setIsCopy(false);
+                  }, 2000);
+              }}
             >
-              <img src="/images/icon-copy.svg" alt="" /> <span>Copy</span>
+              {isCopy ? <BiCheck /> : <BiCopy />}{" "}
+              <span className="md:block hidden">{isCopy ? "Copied!":"Copy"}</span>
             </button>
+            {/* Copy button */}
+
+            {/* Reply button */}
             <button
               onClick={handleShowReply}
               className="text-[rgb(79,78,156)] border-none gap-2 flex items-center border"
             >
-              <img src="/images/icon-reply.svg" alt="" />
-              Reply
+              <FaShare />
+              <span className="md:block hidden">Reply</span>
             </button>
+            {/* Reply button */}
+
+            {/* Delete button */}
             {chatData.currentUser && (
               <button
                 className="text-red-500 md:px-4 py-1 rounded flex items-center gap-2"
                 onClick={() => chatData.handleDeleteComment(comment.id)}
               >
-                <img src="/images/icon-delete.svg" alt="" /> <span>Delete</span>
+                <AiTwotoneDelete />{" "}
+                <span className="md:block hidden">Delete</span>
               </button>
             )}
+            {/* Delete button */}
             {isCurrentUser && !isEditing && (
               <button
                 className=" text-blue-500 px-2 py-1 flex items-center gap-2 rounded"
                 onClick={() => setIsEditing(true)}
               >
-                <img src="/images/icon-edit.svg" alt="" />
-                <span>Edit Reply</span>
+                <AiFillEdit/>
+                <span className="md:block hidden">Edit Reply</span>
               </button>
             )}
+            </div>
           </div>
         </div>
 
@@ -182,8 +208,8 @@ const Comment = () => {
         {comment.replies.length > 0 && (
           <div className="mt-4 flex flex-col gap-5 pl-4 border-l">
             {comment.replies.map((reply) => (
-              <ReplyContext.Provider value={{ reply, handleReplySubmit }}>
-                <Reply key={reply.id} />
+              <ReplyContext.Provider key={reply.id} value={{ reply, handleReplySubmit }}>
+                <Reply />
               </ReplyContext.Provider>
             ))}
           </div>

@@ -8,6 +8,8 @@ export const AppWrapper = ({children}) => {
   
   const [comments, setComments] = useState(data[0].comments);
   const [replyContent, setReplyContent] = useState("");
+  const [isPlay, setIsPlay] = useState(false);
+  const [isCopy, setIsCopy] = useState(false);
   
   const currentUser = data[0].currentUser;
   
@@ -40,14 +42,22 @@ export const AppWrapper = ({children}) => {
   };
 
   const handleCopyComment = (commentContent) => {
-    navigator.clipboard.writeText(commentContent).then(() => {
-      console.log("Content copied to clipboard");
-    });
+    setIsCopy(true);
+
+    setTimeout(() => {
+      setIsCopy(false)
+    }, 2000);
+    
+    navigator.clipboard.writeText(commentContent)
+    // .then(() => {
+    //   console.log("Content copied to clipboard");
+    // });
   };
   const handleCopyReply = (commentContent) => {
-    navigator.clipboard.writeText(commentContent).then(() => {
-      console.log("Content copied to clipboard");
-    });
+    navigator.clipboard.writeText(commentContent)
+    // .then(() => {
+    //   console.log("Content copied to clipboard");
+    // });
   };
 
   const handleReply = (parentId, content) => {
@@ -145,9 +155,13 @@ export const AppWrapper = ({children}) => {
     handleEditComment,
     setComments,
     setReplyContent,
+    setIsCopy,
+    setIsPlay,
     comments,
     replyContent,
     currentUser,
+    isCopy,
+    isPlay
   }
 
   return (
